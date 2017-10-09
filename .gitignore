@@ -1,0 +1,26 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Test Coverages
+.nyc_output
+coverage
+
+# Dependency directories
+node_modules
+
+# Optional npm cache directory
+.npm
+
+# misc
+.DS_STORE
+src/config/environments/*.json
+!src/config/environments/test.json
+!src/config/environments/*.sample
+
+# idea
+.idea
+
+# visual code
+package-lock.json

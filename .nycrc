@@ -1,0 +1,11 @@
+{
+  "exclude": [
+    "**/*.spec.js",
+    "src/config",
+    "src/mocks",
+    "src/index.js",
+    "coverage"
+  ],
+  "cache": false,
+  "all": true
+}

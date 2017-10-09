@@ -1,0 +1,41 @@
+{
+  "name": "memoriae-api",
+  "version": "0.0.1",
+  "description": "RESTFUL API for Memoriae",
+  "main": "src",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -w src --exec \"npm run lint && npm run coverage:dev && npm start\"",
+    "start": "node src",
+    "lint": "eslint src",
+    "test": "NODE_ENV=test mocha $(find src -name '*.spec.js')",
+    "coverage": "nyc --check-coverage --lines 85 --functions 85 --branches 85 npm test",
+    "coverage:dev": "nyc --reporter=text-summary npm test",
+    "coverage:report": "nyc --reporter=html --reporter=text npm test && open coverage/index.html"
+  },
+  "repository": "574BandOfBrothers/memoriae-api",
+  "private": true,
+  "author": "574BandOfBrothers",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "body-parser": "1.13.3",
+    "compression": "1.6.2",
+    "cors": "2.8.3",
+    "express": "4.15.2",
+    "helmet": "3.8.2",
+    "jsonwebtoken": "8.1.0",
+    "mongoose": "4.12.1"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "chai-as-promised": "6.0.0",
+    "chai-http": "3.0.0",
+    "eslint": "3.19.0",
+    "eslint-config-airbnb-base": "11.1.3",
+    "eslint-plugin-import": "2.2.0",
+    "mocha": "3.3.0",
+    "nodemon": "1.11.0",
+    "nyc": "10.3.2",
+    "sinon": "2.3.4"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "env": {
+    "port": 8080,
+    "gracefullShutdown": false,
+    "gracefullTimeout": 30000
+  },
+  "body": {
+    "limit": "10mb"
+  },
+  "cors": {
+    "allowedHeaders": ["Content-Type", "Authorization", "Content-Length", "X-Requested-With", "X-Platform"],
+    "origin": "*",
+    "methods": ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
+  },
+  "db": {
+    "host": "localhost",
+    "port": 27017,
+    "name": "",
+    "username": "",
+    "password": "",
+    "keepAlive": 300000,
+    "timeout": 300000
+  },
+  "jwt": {
+    "key": "key",
+    "expire": "30 days"
+  }
+}
