@@ -1,6 +1,6 @@
 # GALADRIEL
 
-![](http://media.giphy.com/media/Ai8GT3SyJCDx6/giphy.gif)
+![](https://i.imgur.com/Q11Sq67.gif)
 
 # Install dependencies
 ```bash
