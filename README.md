@@ -1,4 +1,4 @@
-# GALADRIEL
+# Memoriae API
 
 ![](https://i.imgur.com/Q11Sq67.gif)
 
