@@ -7,7 +7,6 @@ const routes = () => {
 
   api.get('/', (req, res) => res.json({ 'Don\'t Worry': 'All is Well!' }));
 
-  // Test jenkins pr hook
   api.use('/annotations', annotations);
 
   // Not Found
