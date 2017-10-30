@@ -10,7 +10,7 @@ const initializeDb = require('./db');
 const routes = require('./routes');
 
 let isShuttingDown = false;
-// Test Jenkins PR
+
 const app = express();
 app.disable('x-powered-by');
 app.server = http.createServer(app);
