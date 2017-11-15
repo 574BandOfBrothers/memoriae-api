@@ -1,6 +1,7 @@
 const Router = require('express').Router;
 
 const annotations = require('./annotations');
+const stories = require('./stories');
 
 const routes = () => {
   const api = Router();
@@ -8,6 +9,7 @@ const routes = () => {
   api.get('/', (req, res) => res.json({ 'Don\'t Worry': 'All is Well!' }));
 
   api.use('/annotations', annotations);
+  api.use('/stories', stories);
 
   // Not Found
   api.all('*', (req, res) => {
