@@ -4,21 +4,20 @@ const UsersResponder = require('../responder/users');
 const router = Router();
 
 /**
- *  Set standart response headers to all annotation routes
- */
-router.use('*', UsersResponder.header);
-
-/**
- * GET & POST /users
+ * GET  /users
+ * POST /users
  */
 router.route('/')
       .get(UsersResponder.list)
       .post(UsersResponder.create);
 
 /**
- * GET /users/:userId
+ * GET /users/:slug
+ * PUT /users/:slug
  */
-// router.route('/:annotationId')
-//       .get(UsersResponder.get);
+router.route('/:slug')
+      .get(UsersResponder.get)
+      .put(UsersResponder.update);
+
 
 module.exports = router;

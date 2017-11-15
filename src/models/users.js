@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
+const slugHero = require('mongoose-slug-hero');
 const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
+slugHero.config.counter = 'slug_counters';
+
 const userSchema = new Schema(({
-  id: {
+  slug: {
     type: String,
     index: true,
     unique: true,
@@ -21,13 +24,26 @@ const userSchema = new Schema(({
     trim: true,
     required: true,
   },
-  hash_password: {
+  password: {
     type: String,
     required: true,
+    select: false,
+  },
+  birthday: {
+    type: Date,
+    default: null,
   },
   created: {
     type: Date,
     default: Date.now,
+  },
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
+  deleted: {
+    type: Date,
+    default: null,
   },
 }
 /*
@@ -35,6 +51,8 @@ const userSchema = new Schema(({
   strict: false,
 }*/
 ));
+
+userSchema.plugin(slugHero, { doc: 'slugs', field: 'name' });
 
 userSchema.methods.comparePassWord = password => bcrypt.compareSync(password, this.hash_password);
 

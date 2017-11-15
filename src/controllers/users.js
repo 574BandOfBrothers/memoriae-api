@@ -1,33 +1,53 @@
-// const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const Users = require('../models/users');
 
 const UsersController = {};
 
-UsersController.create = usersData => new Promise((resolve, reject) => {
+UsersController.create = data => new Promise((resolve, reject) => {
+  const hashPassword = bcrypt.hashSync(data.password, 10);
+
+  const usersData = {
+    slug: data.slug,
+    name: data.name,
+    email: data.email,
+    password: hashPassword,
+  };
+
   const newUser = new Users(usersData);
 
   newUser.save()
          .then(resolve, reject);
 });
 
-/*
-UsersController.get = userData => new Promise((resolve, reject) => {
-  Users.findById(id).then(resolve, reject);
-});
-*/
 
-UsersController.list = usersData => new Promise((resolve, reject) => {
-  Users.find(usersData)
+UsersController.get = data => new Promise((resolve, reject) => {
+  const usersData = {
+    slug: data,
+  };
+
+  Users.findOne(usersData)
+       .then(resolve, reject);
+});
+
+
+UsersController.list = () => new Promise((resolve, reject) => {
+  Users.find()
+       .then(resolve, reject);
+});
+
+
+UsersController.update = (slug_, data) => new Promise((resolve, reject) => {
+  const usersData = {
+    slug: data,
+  };
+
+  // TODO mustafa: complete here
+  Users.findOne(usersData)
        .then(resolve, reject);
 });
 
 /*
-UsersController.update = usersData => new Promise((resolve, reject) => {
-});
-
-
 UsersController.delete = usersData => new Promise((resolve, reject) => {
 });
 */
