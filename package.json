@@ -4,10 +4,12 @@
   "description": "RESTFUL API for Memoriae",
   "main": "src",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w src --exec \"npm run lint && npm run coverage:dev && npm start\"",
+    "dev": "NODE_ENV=development nodemon -w src -w specs --exec \"npm run lint && npm run coverage:dev && npm start\"",
+    "docker": "NODE_ENV=docker nodemon -w src -w specs --exec \"npm run lint && npm run test:docker && npm start\"",
     "start": "node src",
     "lint": "eslint src",
-    "test": "NODE_ENV=test mocha $(find src -name '*.spec.js')",
+    "test": "NODE_ENV=test mocha specs --recursive",
+    "test:docker": "NODE_ENV=test_docker mocha specs --recursive",
     "coverage": "nyc --check-coverage --lines 85 --functions 85 --branches 85 npm test",
     "coverage:dev": "nyc --reporter=text-summary npm test",
     "coverage:report": "nyc --reporter=html --reporter=text npm test && open coverage/index.html"
