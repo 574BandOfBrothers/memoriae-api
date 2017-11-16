@@ -56,4 +56,4 @@ userSchema.plugin(slugHero, { doc: 'slugs', field: 'name' });
 
 userSchema.methods.comparePassWord = password => bcrypt.compareSync(password, this.hash_password);
 
-module.exports = mongoose.model('users', userSchema);
+module.exports = mongoose.model('User', userSchema);
