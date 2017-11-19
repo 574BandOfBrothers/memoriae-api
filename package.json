@@ -19,6 +19,7 @@
   "author": "574BandOfBrothers",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.151.0",
     "bcryptjs": "2.4.3",
     "body-parser": "1.13.3",
     "compression": "1.6.2",
