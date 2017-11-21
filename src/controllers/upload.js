@@ -25,18 +25,21 @@ const UploadController = {
         .update(`${Date.now().toString()}-pre-${prefix}-id-${fileIdentifier}`)
         .digest('hex');
 
-      s3.getSignedUrl('putObject', {
+      const urlConfig = {
         Bucket: s3Config.bucket,
         Expires: s3Config.expires,
         ACL: s3Config.acl,
         ContentType: contentType,
         Key: key,
-      }, (error, url) => {
+      };
+
+      s3.getSignedUrl('putObject', urlConfig, (error, url) => {
         if (error) {
           return reject(error);
         }
 
         return resolve({
+          config: urlConfig,
           fileUrl: `https://${s3Config.bucket}.s3.amazonaws.com/${key}`,
           signedUrl: url,
         });

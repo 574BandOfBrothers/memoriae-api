@@ -4,7 +4,7 @@ const StoryController = {
   list: fields =>
     Story.find({ deletedAt: null })
     .select(fields)
-    .sort(fields)
+    .sort('-_id')
     .exec(),
 
   get: storyId => new Promise((resolve, reject) => {
