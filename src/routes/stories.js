@@ -26,9 +26,7 @@ router.post('/', (req, res) => {
 
   StoryController.create(data)
   .then(story => res.status(201).json(story))
-  .catch((error) => {
-    res.boom.badImplementation(error.message);
-  });
+  .catch(error => res.boom.badImplementation(error.message));
 });
 
 // Update Story
