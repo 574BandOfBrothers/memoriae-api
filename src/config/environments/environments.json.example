@@ -22,8 +22,8 @@
     "timeout": 300000
   },
   "jwt": {
-    "key": "key",
-    "expire": "30 days"
+    "secret": "memoriae-is-the-winner",
+    "expire": "30d"
   },
   "aws": {
     "accessKeyId": "localaccesskey",
