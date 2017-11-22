@@ -16,7 +16,6 @@ node_modules
 # misc
 .DS_STORE
 src/config/environments/*.json
-!src/config/environments/test.json
 !src/config/environments/*.sample
 
 # idea
