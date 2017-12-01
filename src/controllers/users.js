@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Users = require('../models/users');
 
 const UsersController = {};
 
 UsersController.create = data => new Promise((resolve, reject) => {
-  const hashPassword = bcrypt.hashSync(data.password, 10);
+  const hashPassword = bcrypt.hashSync(data.password);
 
   const usersData = {
     slug: data.slug,
@@ -37,7 +36,8 @@ UsersController.list = () => new Promise((resolve, reject) => {
 });
 
 
-UsersController.update = (slug_, data) => new Promise((resolve, reject) => {
+UsersController.update = (slug, data) => new Promise((resolve, reject) => {
+  // TODO mustafa: complete here
   const usersData = {
     slug: data,
   };
@@ -51,29 +51,6 @@ UsersController.update = (slug_, data) => new Promise((resolve, reject) => {
 UsersController.delete = usersData => new Promise((resolve, reject) => {
 });
 */
-
-UsersController.authenticate = loginData => new Promise((resolve, reject) => {
-  Users.findOne({ email: loginData.email }, (err, user) => {
-    if (err) {
-      reject();
-      return { message: 'Database Error!' };
-    }
-
-    if (user && user.comparePassword(loginData.password)) {
-      resolve();
-      return {
-        token: jwt.sign({
-          email: user.email,
-          fullName: user.fullName,
-          _id: user._id,
-        }, 'RESTFULAPIs'),
-      };
-    }
-
-    reject();
-    return { message: 'Authentication Failed!' };
-  });
-});
 
 /*
 UsersController.loginRequired = (req, res, next) => {

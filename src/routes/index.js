@@ -1,5 +1,6 @@
 const Router = require('express').Router;
 
+const authenticate = require('./authenticate');
 const users = require('./users');
 const annotations = require('./annotations');
 const stories = require('./stories');
@@ -10,6 +11,7 @@ const routes = () => {
 
   api.get('/', (req, res) => res.json({ 'Don\'t Worry': 'All is Well!' }));
 
+  api.use('/authenticate', authenticate);
   api.use('/users', users);
   api.use('/annotations', annotations);
   api.use('/stories', stories);

@@ -19,5 +19,4 @@ router.route('/:slug')
       .get(UsersResponder.get)
       .put(UsersResponder.update);
 
-
 module.exports = router;
