@@ -23,17 +23,17 @@ UsersResponder.get = (req, res) => {
   const resolve = data => res.status(200).json(data);
   const reject = error => res.status(500).json(error);
 
-  const slug = req.params.userId;
+  const slug = req.params.slug;
 
   UsersController.get(slug)
                  .then(resolve, reject);
 };
 
 UsersResponder.update = (req, res) => {
-  const resolve = data => res.status(201).json(data);
+  const resolve = data => res.status(200).json(data);
   const reject = error => res.boom.badImplementation(error);
 
-  const slug = req.params.userId;
+  const slug = req.params.slug;
   const data = req.body;
 
   UsersController.update(slug, data)
@@ -44,7 +44,7 @@ UsersResponder.delete = (req, res) => {
   const resolve = data => res.status(200).json(data);
   const reject = error => res.boom.badImplementation(error);
 
-  const slug = req.params.userId;
+  const slug = req.params.slug;
   const data = req.body;
 
   UsersController.delete(slug, data)
