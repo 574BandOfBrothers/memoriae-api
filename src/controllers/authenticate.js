@@ -38,8 +38,7 @@ AuthenticateController.authenticate = (email_, password) => new Promise((resolve
 
     // Correct password
     const payload = {
-      email: user.email,
-      fullName: user.fullName,
+      slug: user.slug,
       _id: user._id,
     };
 
@@ -48,7 +47,7 @@ AuthenticateController.authenticate = (email_, password) => new Promise((resolve
     const token_ = jwt.sign(payload, secret, { expiresIn: expire });
 
     return resolve({
-      token: token_,
+      accessToken: token_,
     });
   }).select('+password').exec();
 });
