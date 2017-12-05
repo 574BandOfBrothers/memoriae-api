@@ -43,13 +43,17 @@ UsersController.list = () => new Promise((resolve, reject) => {
 });
 
 
-UsersController.update = (slug_, data) => new Promise((resolve, reject) => {
-  Users.findOneAndUpdate({ slug: slug_ }, data, { new: true })
+UsersController.update = (slug, data) => new Promise((resolve, reject) => {
+  delete data._id;
+  delete data.__v;
+  delete data.slug;
+  delete data.slugs;
+
+  Users.findOneAndUpdate({ slug }, data, { new: true })
        .then((user) => {
          if (user === null) {
            return reject();
          }
-
          return resolve(user);
        })
        .catch(reject);

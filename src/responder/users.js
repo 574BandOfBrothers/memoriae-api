@@ -45,9 +45,8 @@ UsersResponder.delete = (req, res) => {
   const reject = error => res.boom.badImplementation(error);
 
   const slug = req.params.slug;
-  const data = req.body;
 
-  UsersController.delete(slug, data)
+  UsersController.delete(slug)
                  .then(resolve, reject);
 };
 
