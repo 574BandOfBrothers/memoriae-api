@@ -26,7 +26,14 @@ UsersController.get = data => new Promise((resolve, reject) => {
   };
 
   Users.findOne(usersData)
-       .then(resolve, reject);
+       .then((user) => {
+         if (user === null) {
+           return reject();
+         }
+
+         resolve(user);
+       })
+       .catch(reject);
 });
 
 
@@ -36,21 +43,33 @@ UsersController.list = () => new Promise((resolve, reject) => {
 });
 
 
-UsersController.update = (slug, data) => new Promise((resolve, reject) => {
-  // TODO mustafa: complete here
-  const usersData = {
-    slug: data,
-  };
+UsersController.update = (slug_, data) => new Promise((resolve, reject) => {
+  Users.findOneAndUpdate({ slug: slug_ }, data, { new: true })
+       .then((user) => {
+         if (user === null) {
+           return reject();
+         }
 
-  // TODO mustafa: complete here
-  Users.findOne(usersData)
-       .then(resolve, reject);
+         return resolve(user);
+       })
+       .catch(reject);
 });
 
-/*
-UsersController.delete = usersData => new Promise((resolve, reject) => {
+
+UsersController.delete = slug_ => new Promise((resolve, reject) => {
+  Users.findOneAndUpdate({ slug: slug_ },
+                         { deleted: Date() },
+                         { new: true })
+        .then((user) => {
+          if (user === null) {
+            return reject();
+          }
+
+          return resolve(user);
+        })
+        .catch(reject);
 });
-*/
+
 
 /*
 UsersController.loginRequired = (req, res, next) => {
