@@ -14,6 +14,7 @@ const StorySchema = new Schema({
   body: { type: String },
   media: [MediaSchema],
   comments: [CommentSchema],
+  location: { type: String },
   deletedAt: Date,
 }, { timestamps: true });
 
