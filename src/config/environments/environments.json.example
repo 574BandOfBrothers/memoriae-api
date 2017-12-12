@@ -22,7 +22,17 @@
     "timeout": 300000
   },
   "jwt": {
-    "key": "key",
-    "expire": "30 days"
+    "secret": "memoriae-is-the-winner",
+    "expire": "30d"
+  },
+  "aws": {
+    "accessKeyId": "localaccesskey",
+    "secretAccessKey": "localsecretaccesskey",
+    "region": "eu-west-1",
+    "s3": {
+      "bucket": "memoriae-media",
+      "expires": 600,
+      "ACL": "public-read"
+    }
   }
 }
