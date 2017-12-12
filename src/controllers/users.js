@@ -72,6 +72,7 @@ UsersController.update = (slug, data) => new Promise((resolve, reject) => {
   }
 
   Users.findOneAndUpdate({ slug }, userData, { new: true })
+
        .then((user) => {
          if (user === null) {
            return reject();
