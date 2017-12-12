@@ -17,7 +17,7 @@ router.route('/')
  */
 router.route('/:slug')
       .get(UsersResponder.get)
-      .put(UsersResponder.update);
-
+      .put(UsersResponder.update)
+      .delete(UsersResponder.delete);
 
 module.exports = router;

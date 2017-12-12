@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Users = require('../models/users');
 
 const UsersController = {};
 
 UsersController.create = data => new Promise((resolve, reject) => {
-  const hashPassword = bcrypt.hashSync(data.password, 10);
+  const hashPassword = bcrypt.hashSync(data.password);
 
   const usersData = {
     slug: data.slug,
@@ -27,7 +26,14 @@ UsersController.get = data => new Promise((resolve, reject) => {
   };
 
   Users.findOne(usersData)
-       .then(resolve, reject);
+       .then((user) => {
+         if (user === null) {
+           return reject();
+         }
+
+         resolve(user);
+       })
+       .catch(reject);
 });
 
 
@@ -37,43 +43,37 @@ UsersController.list = () => new Promise((resolve, reject) => {
 });
 
 
-UsersController.update = (slug_, data) => new Promise((resolve, reject) => {
-  const usersData = {
-    slug: data,
-  };
+UsersController.update = (slug, data) => new Promise((resolve, reject) => {
+  delete data._id;
+  delete data.__v;
+  delete data.slug;
+  delete data.slugs;
 
-  // TODO mustafa: complete here
-  Users.findOne(usersData)
-       .then(resolve, reject);
+  Users.findOneAndUpdate({ slug }, data, { new: true })
+       .then((user) => {
+         if (user === null) {
+           return reject();
+         }
+         return resolve(user);
+       })
+       .catch(reject);
 });
 
-/*
-UsersController.delete = usersData => new Promise((resolve, reject) => {
+
+UsersController.delete = slug_ => new Promise((resolve, reject) => {
+  Users.findOneAndUpdate({ slug: slug_ },
+                         { deleted: Date() },
+                         { new: true })
+        .then((user) => {
+          if (user === null) {
+            return reject();
+          }
+
+          return resolve(user);
+        })
+        .catch(reject);
 });
-*/
 
-UsersController.authenticate = loginData => new Promise((resolve, reject) => {
-  Users.findOne({ email: loginData.email }, (err, user) => {
-    if (err) {
-      reject();
-      return { message: 'Database Error!' };
-    }
-
-    if (user && user.comparePassword(loginData.password)) {
-      resolve();
-      return {
-        token: jwt.sign({
-          email: user.email,
-          fullName: user.fullName,
-          _id: user._id,
-        }, 'RESTFULAPIs'),
-      };
-    }
-
-    reject();
-    return { message: 'Authentication Failed!' };
-  });
-});
 
 /*
 UsersController.loginRequired = (req, res, next) => {

@@ -54,6 +54,10 @@ const userSchema = new Schema(({
 
 userSchema.plugin(slugHero, { doc: 'slugs', field: 'name' });
 
-userSchema.methods.comparePassWord = password => bcrypt.compareSync(password, this.hash_password);
+// userSchema.methods.comparePassWord = password =>
+// bcrypt.compareSync(password, this.hash_password);
+userSchema.methods.comparePassword = function comparePassword(password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 module.exports = mongoose.model('User', userSchema);
