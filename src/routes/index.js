@@ -1,5 +1,5 @@
 const Router = require('express').Router;
-// const authMiddleware = require('./middlewares/auth'); // TODO mustafa
+const authMiddleware = require('../middlewares/auth');
 
 const authenticate = require('./authenticate');
 const users = require('./users');
@@ -7,12 +7,11 @@ const annotations = require('./annotations');
 const stories = require('./stories');
 const uploads = require('./uploads');
 
-// TODO mustafa
-const routes = () => {
-// const routes = (app) => {
-  // if (process.env.TYPE !== 'test') {
-  //   app.use(authMiddleware());
-  // }
+
+const routes = (app) => {
+  if (process.env.TYPE !== 'test') {
+    app.use(authMiddleware());
+  }
 
   const api = Router();
 
