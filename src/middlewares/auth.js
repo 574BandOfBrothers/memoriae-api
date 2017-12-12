@@ -31,7 +31,7 @@ const getAuthorizedUser = token => new Promise((resolve, reject) => {
       return reject(error);
     }
 
-    User.findById(decoded._id, '-password -__v', (userError, user) => {
+    User.findById(decoded.id, '-password -__v', (userError, user) => {
       if (userError || user === null) {
         return reject(userError || null);
       }
