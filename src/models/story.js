@@ -1,3 +1,5 @@
+import { Stream } from 'stream';
+
 const mongoose = require('mongoose');
 
 const MediaSchema = require('./media');
@@ -14,6 +16,7 @@ const StorySchema = new Schema({
   body: { type: String },
   media: [MediaSchema],
   comments: [CommentSchema],
+  location: { type: String },
   deletedAt: Date,
 }, { timestamps: true });
 
