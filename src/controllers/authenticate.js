@@ -39,7 +39,7 @@ AuthenticateController.authenticate = (email_, password) => new Promise((resolve
     // Correct password
     const payload = {
       slug: user.slug,
-      id: user._id,
+      _id: user._id,
     };
 
     const secret = config.jwt.secret;
