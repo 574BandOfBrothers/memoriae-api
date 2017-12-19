@@ -44,12 +44,13 @@ UsersController.list = () => new Promise((resolve, reject) => {
 
 
 UsersController.update = (slug, data) => new Promise((resolve, reject) => {
-  delete data._id;
-  delete data.__v;
-  delete data.slug;
-  delete data.slugs;
+  const updatedData = data;
+  delete updatedData._id;
+  delete updatedData.__v;
+  delete updatedData.slug;
+  delete updatedData.slugs;
 
-  Users.findOneAndUpdate({ slug }, data, { new: true })
+  Users.findOneAndUpdate({ slug }, updatedData, { new: true })
        .then((user) => {
          if (user === null) {
            return reject();
