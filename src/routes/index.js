@@ -7,6 +7,7 @@ const users = require('./users');
 const annotations = require('./annotations');
 const stories = require('./stories');
 const uploads = require('./uploads');
+const me = require('./me');
 
 const routes = () => {
   const api = Router();
@@ -17,8 +18,10 @@ const routes = () => {
   api.use('/users', users);
   api.use('/annotations', annotations);
 
+  // Authenticated Routes
   api.use(authMiddleware);
   api.use('/stories', stories);
+  api.use('/me', me);
   api.use('/uploads', uploads);
 
   // Not Found

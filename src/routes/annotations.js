@@ -118,7 +118,11 @@ router.get('/', (req, res) => {
 router.get('/:annotationId', (req, res) => {
   res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type"');
   AnnotationController.getById(req.params.annotationId)
-  .then(annotation => res.json(annotation))
+  .then((annotation) => {
+    const modifiedAnnotation = annotation;
+    modifiedAnnotation.id = `${config.api.annotationEndpoint}/${modifiedAnnotation._id}`;
+    res.json(modifiedAnnotation);
+  })
   .catch(error => res.json(error));
 });
 
