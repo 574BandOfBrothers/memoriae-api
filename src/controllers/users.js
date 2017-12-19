@@ -44,12 +44,35 @@ UsersController.list = () => new Promise((resolve, reject) => {
 
 
 UsersController.update = (slug, data) => new Promise((resolve, reject) => {
-  delete data._id;
-  delete data.__v;
-  delete data.slug;
-  delete data.slugs;
+  const userData = data;
 
-  Users.findOneAndUpdate({ slug }, data, { new: true })
+  if (Object.prototype.hasOwnProperty.call(data, '_id')) {
+    // eslint-disable-next-line
+    delete data._id;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(data, '__v')) {
+    // eslint-disable-next-line
+    delete data.__v;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(data, 'slug')) {
+    // eslint-disable-next-line
+    delete data.slug;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(data, 'slugs')) {
+    // eslint-disable-next-line
+    delete data.slugs;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(data, 'password')) {
+    const hashPassword = bcrypt.hashSync(data.password);
+    userData.password = hashPassword;
+  }
+
+  Users.findOneAndUpdate({ slug }, userData, { new: true })
+
        .then((user) => {
          if (user === null) {
            return reject();
