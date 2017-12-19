@@ -42,7 +42,7 @@ AuthenticateController.authenticate = (email_, password) => new Promise((resolve
       _id: user._id,
     };
 
-    const secret = config.jwt.secret;
+    const secret = config.jwt.key;
     const expire = config.jwt.expire;
     const token_ = jwt.sign(payload, secret, { expiresIn: expire });
 
