@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/environment');
 const User = require('../models/users');
 
-// const authenticatedMethods = ['POST', 'PUT', 'DELETE'];
-const authenticatedMethods = config.cors.method; // TODO Mustafa
+const authenticatedMethods = ['POST', 'PUT', 'DELETE'];
+// const authenticatedMethods = config.cors.method; // TODO Mustafa
 const authenticatedRoutes = ['users', 'stories', 'uploads'];
 const excludedPaths = ['authenticate', 'annotations'];
 
@@ -47,7 +47,7 @@ const isAuthRequiredEndpoint = (method, path) => {
            excludedPaths.indexOf(realPath) < 0);
 };
 
-const authMiddleware = (req, res, next) => { // eslint-disable-line
+const authMiddleware = () => (req, res, next) => { // eslint-disable-line
   // return next();
   const token = getAuthorizationToken(req.headers.authorization);
   const authRequired = isAuthRequiredEndpoint(req.method, req.path);
