@@ -18,6 +18,17 @@ const StoryController = {
     .catch(reject);
   }),
 
+  getByCreator: creatorId => new Promise((resolve, reject) => {
+    Story.find({ creator: creatorId })
+    .then((story) => {
+      if (story === null) {
+        return reject();
+      }
+      resolve(story);
+    })
+    .catch(reject);
+  }),
+
   create: data => new Promise((resolve, reject) => {
     const newStory = new Story(data);
     newStory.save()
