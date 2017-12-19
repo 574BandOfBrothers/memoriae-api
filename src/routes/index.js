@@ -9,7 +9,7 @@ const uploads = require('./uploads');
 
 
 const routes = (app) => {
-  if (process.env.TYPE !== 'test') {
+  if (process.env.NODE_ENV.indexOf('test') < 0) {
     app.use(authMiddleware());
   }
 

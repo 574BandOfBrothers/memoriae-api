@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
-import config from '../config/environment';
-import User from '../models/users';
+const jwt = require('jsonwebtoken');
+const config = require('../config/environment');
+const User = require('../models/users');
 
 // const authenticatedMethods = ['POST', 'PUT', 'DELETE'];
 const authenticatedMethods = config.cors.method; // TODO Mustafa
@@ -47,7 +47,7 @@ const isAuthRequiredEndpoint = (method, path) => {
            excludedPaths.indexOf(realPath) < 0);
 };
 
-export default () => function authMiddleware(req, res, next) { // eslint-disable-line
+const authMiddleware = (req, res, next) => { // eslint-disable-line
   // return next();
   const token = getAuthorizationToken(req.headers.authorization);
   const authRequired = isAuthRequiredEndpoint(req.method, req.path);
@@ -69,3 +69,5 @@ export default () => function authMiddleware(req, res, next) { // eslint-disable
     return next();
   });
 };
+
+module.exports = authMiddleware;
