@@ -24,6 +24,10 @@ router.get('/:storyId', (req, res) => {
 router.post('/', (req, res) => {
   const data = req.body;
 
+  if (req.user) {
+    data.creator = req.user._id;
+  }
+
   StoryController.create(data)
   .then(story => res.status(201).json(story))
   .catch(error => res.boom.badImplementation(error.message));

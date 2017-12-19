@@ -1,6 +1,8 @@
 const Router = require('express').Router;
 
 const authenticate = require('./authenticate');
+const authMiddleware = require('../middlewares/auth');
+
 const users = require('./users');
 const annotations = require('./annotations');
 const stories = require('./stories');
@@ -14,6 +16,8 @@ const routes = () => {
   api.use('/authenticate', authenticate);
   api.use('/users', users);
   api.use('/annotations', annotations);
+
+  api.use(authMiddleware);
   api.use('/stories', stories);
   api.use('/uploads', uploads);
 
