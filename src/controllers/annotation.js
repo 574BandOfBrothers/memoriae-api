@@ -4,7 +4,15 @@ const Annotation = require('../models/annotation');
 
 const AnnotationController = {};
 
-AnnotationController.list = fields => Annotation.find(fields);
+AnnotationController.list = ({ fields, limit = 20, page = 0, sort } = {}) =>
+  Annotation
+    .find()
+    .select(fields)
+    .limit(limit)
+    .skip(page * limit)
+    .sort(sort)
+    .exec();
+
 AnnotationController.count = () => Annotation.count();
 
 AnnotationController.create = annotationData => new Promise((resolve, reject) => {
@@ -18,5 +26,10 @@ AnnotationController.create = annotationData => new Promise((resolve, reject) =>
 });
 
 AnnotationController.getById = id => Annotation.findById(id);
+
+AnnotationController.removeById = id =>
+  AnnotationController.getById(id)
+  .remove()
+  .exec();
 
 module.exports = AnnotationController;

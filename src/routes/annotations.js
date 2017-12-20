@@ -5,9 +5,18 @@ const config = require('../config/environment');
 const AnnotationController = require('../controllers/annotation');
 
 const ListTypes = {
-  Minimal: 'return=representation;include="http://www.w3.org/ns/ldp#PreferMinimalContainer"',
-  ContainedIRIs: 'return=representation;include="http://www.w3.org/ns/oa#PreferContainedIRIs"',
-  ContainedDescription: 'return=representation;include="http://www.w3.org/ns/oa#PreferContainedDescriptions"',
+  Minimal: {
+    header: 'return=representation;include="http://www.w3.org/ns/ldp#PreferMinimalContainer"',
+    id: 1,
+  },
+  ContainedIRIs: {
+    header: 'return=representation;include="http://www.w3.org/ns/oa#PreferContainedIRIs"',
+    id: 1,
+  },
+  ContainedDescription: {
+    header: 'return=representation;include="http://www.w3.org/ns/oa#PreferContainedDescriptions"',
+    id: 0,
+  },
 };
 
 const annotationsPerPage = 20;
@@ -28,7 +37,12 @@ router.use('*', (req, res, next) => {
  * https://www.w3.org/TR/annotation-protocol/#annotation-containers
  */
 router.get('/', (req, res) => {
-  const preferedListType = req.get('Prefer') || ListTypes.Minimal;
+  const requiredIris = req.query.iris;
+
+  const requiredType = typeof requiredIris !== 'undefined' && ListTypes[Object.keys(ListTypes)
+    .find(key => ListTypes[key].id === parseInt(requiredIris, 10))];
+
+  const preferedListType = requiredType ? requiredType.header : (req.get('Prefer') || ListTypes.Minimal.header);
 
   res.set('Link', [
     '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"',
@@ -50,22 +64,28 @@ router.get('/', (req, res) => {
   .then((totalAnnotationCount) => {
     const totalPages = Math.ceil(totalAnnotationCount / annotationsPerPage);
     responseData.total = totalAnnotationCount;
-    responseData.last = `${config.api.annotationEndpoint}/page/${totalPages}`;
+
+    const iris = ListTypes[Object.keys(ListTypes)
+      .find(key => ListTypes[key].header === preferedListType)].id;
+
+    if (totalPages > 1) {
+      responseData.last = `${config.api.annotationEndpoint}/page/${totalPages}?iris=${iris}`;
+    }
 
     switch (preferedListType) {
-      case ListTypes.ContainedIRIs:
-        AnnotationController.list('_id')
+      case ListTypes.ContainedIRIs.header:
+        AnnotationController.list({ fields: '_id' })
         .then((annotationList) => {
           const computedList = Object.assign({
             first: {
-              id: `${config.api.annotationEndpoint}/page/1`,
+              id: `${config.api.annotationEndpoint}/page/1?iris=${iris}`,
               type: 'AnnotationPage',
               items: annotationList.map(annotation => `${config.api.annotationEndpoint}/${annotation._id}`),
             },
           }, responseData);
 
           if (totalPages > 1) {
-            computedList.first.next = `${config.api.annotationEndpoint}/page/2`;
+            computedList.first.next = `${config.api.annotationEndpoint}/page/2?iris=${iris}`;
           }
 
           res.json(computedList);
@@ -73,12 +93,12 @@ router.get('/', (req, res) => {
         .catch();
         break;
 
-      case ListTypes.ContainedDescription:
+      case ListTypes.ContainedDescription.header:
         AnnotationController.list()
         .then((annotationList) => {
           const computedList = Object.assign({
             first: {
-              id: `${config.api.annotationEndpoint}/page/1`,
+              id: `${config.api.annotationEndpoint}/page/1?iris=${iris}`,
               type: 'AnnotationPage',
               items: annotationList.map((annotation) => {
                 const computedAnnotation = annotation.toObject();
@@ -94,7 +114,7 @@ router.get('/', (req, res) => {
           }, responseData);
 
           if (totalPages > 1) {
-            computedList.first.next = `${config.api.annotationEndpoint}/page/2`;
+            computedList.first.next = `${config.api.annotationEndpoint}/page/2?iris=${iris}`;
           }
 
           return res.json(computedList);
@@ -104,7 +124,7 @@ router.get('/', (req, res) => {
 
       default:
         return res.json(Object.assign({
-          first: `${config.api.annotationEndpoint}/page/1`,
+          first: `${config.api.annotationEndpoint}/page/1?iris=${iris}`,
         }, responseData));
     }
   })
@@ -112,18 +132,82 @@ router.get('/', (req, res) => {
 });
 
 /**
- * GET /annotations/:annotationId
+ * GET /annotations/page/:id?iris=type
  * https://www.w3.org/TR/annotation-protocol/#annotation-retrieval
+ */
+router.get('/page/:pageNumber', (req, res) => {
+  const pageNumber = parseInt(req.params.pageNumber, 10);
+  if (!pageNumber) {
+    return res.boom.badRequest();
+  }
+
+  const iris = parseInt(req.query.iris || 0, 10);
+
+  const responseData = {
+    '@context': [
+      'http://www.w3.org/ns/anno.jsonld',
+      'http://www.w3.org/ns/ldp.jsonld',
+    ],
+    id: `${config.api.annotationEndpoint}/page/${pageNumber}?iris=${iris}`,
+    type: 'AnnotationPage',
+    partOf: {
+      id: `${config.api.annotationEndpoint}?iris=${iris}`,
+      modified: new Date(),
+    },
+    startIndex: (pageNumber - 1) * annotationsPerPage,
+  };
+
+  AnnotationController.count()
+  .then((totalAnnotationCount) => {
+    const totalPages = Math.ceil(totalAnnotationCount / annotationsPerPage);
+
+    responseData.partOf.total = totalAnnotationCount;
+
+    if (pageNumber > 1) {
+      let prevPage = pageNumber - 1;
+      prevPage = prevPage > totalPages ? totalPages : prevPage;
+      responseData.prev = `${config.api.annotationEndpoint}/page/${prevPage}?iris=${iris}`;
+    }
+
+    if (pageNumber < totalPages) {
+      responseData.next = `${config.api.annotationEndpoint}/page/${pageNumber + 1}?iris=${iris}`;
+    }
+
+    AnnotationController.list({ page: pageNumber - 1, limit: annotationsPerPage })
+    .then((annotationList) => {
+      responseData.items = annotationList.map((annotation) => {
+        const computedAnnotation = annotation.toObject();
+        computedAnnotation.type = 'Annotation';
+        computedAnnotation.id = `${config.api.annotationEndpoint}/${computedAnnotation._id}`;
+
+        delete computedAnnotation._id;
+        delete computedAnnotation.__v;
+
+        return iris === 1 ? computedAnnotation.id : computedAnnotation;
+      });
+
+      return res.json(responseData);
+    })
+    .catch();
+  })
+  .catch(error => res.json(error));
+});
+
+/**
+ * GET /annotations/:annotationId
+ * https://www.w3.org/TR/annotation-protocol/#annotation-pages
  */
 router.get('/:annotationId', (req, res) => {
   res.set('Link', '<http://www.w3.org/ns/ldp#Resource>; rel="type"');
   AnnotationController.getById(req.params.annotationId)
   .then((annotation) => {
-    const modifiedAnnotation = annotation;
+    const modifiedAnnotation = annotation.toObject();
     modifiedAnnotation.id = `${config.api.annotationEndpoint}/${modifiedAnnotation._id}`;
+    delete modifiedAnnotation._id;
+    delete modifiedAnnotation.__v;
     res.json(modifiedAnnotation);
   })
-  .catch(error => res.json(error));
+  .catch(() => res.boom.notFound());
 });
 
 /**
@@ -134,6 +218,16 @@ router.post('/', (req, res) => {
   AnnotationController.create(req.body)
   .then(data => res.status(201).json(data))
   .catch(error => res.status(400).json(error));
+});
+
+/**
+ * DELETE /annotations/:annotationId
+ * https://www.w3.org/TR/annotation-protocol/#annotation-pages
+ */
+router.delete('/:annotationId', (req, res) => {
+  AnnotationController.removeById(req.params.annotationId)
+  .then(() => res.sendStatus(204))
+  .catch(() => res.boom.notFound());
 });
 
 module.exports = router;
