@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/environment');
 
-const authenticatedMethods = ['POST', 'PUT', 'DELETE'];
+const authenticatedMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 const excludedPaths = [];
 
 const User = require('../models/users');
