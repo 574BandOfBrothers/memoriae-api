@@ -4,9 +4,9 @@ const Annotation = require('../models/annotation');
 
 const AnnotationController = {};
 
-AnnotationController.list = ({ fields, limit = 20, page = 0, sort } = {}) =>
+AnnotationController.list = ({ search, fields, limit = 20, page = 0, sort } = {}) =>
   Annotation
-    .find()
+    .find(search)
     .select(fields)
     .limit(limit)
     .skip(page * limit)

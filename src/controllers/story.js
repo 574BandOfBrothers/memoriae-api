@@ -1,11 +1,14 @@
 const Story = require('../models/story');
 
 const StoryController = {
-  list: fields =>
-    Story.find({ deletedAt: null })
-    .select(fields)
-    .sort('-_id')
-    .exec(),
+  list: ({ fields, search = {}, sort = '-id' } = {}) => {
+    const searchObject = Object.assign(search, { deletedAt: null });
+    return Story
+      .find(searchObject)
+      .select(fields)
+      .sort(sort)
+      .exec();
+  },
 
   get: storyId => new Promise((resolve, reject) => {
     Story.findById(storyId)
