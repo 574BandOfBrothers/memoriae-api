@@ -13,9 +13,10 @@ const routes = () => {
 
   api.get('/', (req, res) => res.json({ 'Don\'t Worry': 'All is Well!' }));
 
+  api.use('/annotations', annotations);
+
   api.use('/authenticate', authenticate);
   api.use('/users', users);
-  api.use('/annotations', annotations);
 
   api.use(authMiddleware);
   api.use('/stories', stories);
