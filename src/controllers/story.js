@@ -1,7 +1,7 @@
 const Story = require('../models/story');
 
 const StoryController = {
-  list: ({ fields, search = {}, sort = '-id' } = {}) => {
+  list: ({ fields, search = {}, sort = '-_id' } = {}) => {
     const searchObject = Object.assign(search, { deletedAt: null });
     return Story
       .find(searchObject)
