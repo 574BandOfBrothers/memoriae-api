@@ -18,10 +18,10 @@ const routes = () => {
   api.use('/annotations', annotations);
 
   api.use('/authenticate', authenticate);
-  api.use('/users', users);
 
   // Authenticated Routes
   api.use(authMiddleware);
+  api.use('/users', users);
   api.use('/search', search);
   api.use('/stories', stories);
   api.use('/me', me);

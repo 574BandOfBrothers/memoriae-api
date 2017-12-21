@@ -47,6 +47,7 @@ AuthenticateController.authenticate = (email_, password) => new Promise((resolve
     const token_ = jwt.sign(payload, secret, { expiresIn: expire });
 
     return resolve({
+      slug: user.slug,
       accessToken: token_,
     });
   }).select('+password').exec();
