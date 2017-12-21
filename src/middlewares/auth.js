@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/environment');
 
-const authenticatedMethods = ['GET', 'POST', 'PUT', 'DELETE'];
+const authenticatedMethods = ['POST', 'PUT', 'DELETE'];
 const excludedPaths = [];
 
 const User = require('../models/users');
@@ -13,6 +13,10 @@ const authMiddleware = (req, res, next) => {
 
   let path = req.path.replace('/v1', '');
   path = path.split('/')[1];
+
+  if (path === 'users' && req.method === 'POST') {
+    return next();
+  }
 
   const shouldValidate = authenticatedMethods.indexOf(req.method) > -1 &&
     excludedPaths.indexOf(path) < 0;
