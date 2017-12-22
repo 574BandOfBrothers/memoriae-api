@@ -38,6 +38,17 @@ router.use('*', (req, res, next) => {
  */
 router.get('/', (req, res) => {
   const requiredIris = req.query.iris;
+  const target = req.query.target;
+  let search;
+
+  if (target) {
+    search = {
+      $or: [
+        { 'target.source': target },
+        { target },
+      ],
+    };
+  }
 
   const requiredType = typeof requiredIris !== 'undefined' && ListTypes[Object.keys(ListTypes)
     .find(key => ListTypes[key].id === parseInt(requiredIris, 10))];
@@ -60,7 +71,7 @@ router.get('/', (req, res) => {
     label: 'Memoriae Annotation Database',
   };
 
-  AnnotationController.count()
+  AnnotationController.count(search)
   .then((totalAnnotationCount) => {
     const totalPages = Math.ceil(totalAnnotationCount / annotationsPerPage);
     responseData.total = totalAnnotationCount;
@@ -74,7 +85,7 @@ router.get('/', (req, res) => {
 
     switch (preferedListType) {
       case ListTypes.ContainedIRIs.header:
-        AnnotationController.list({ fields: '_id' })
+        AnnotationController.list({ fields: '_id', search })
         .then((annotationList) => {
           const computedList = Object.assign({
             first: {
@@ -94,7 +105,7 @@ router.get('/', (req, res) => {
         break;
 
       case ListTypes.ContainedDescription.header:
-        AnnotationController.list()
+        AnnotationController.list({ search })
         .then((annotationList) => {
           const computedList = Object.assign({
             first: {
