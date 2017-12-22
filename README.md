@@ -9,9 +9,9 @@ npm install
 
 # Create environment configs
 ```bash
-cp src/config/environments/environments.json.example development.json
-cp src/config/environments/environments.json.example test.json
-cp src/config/environments/environments.json.example production.json
+cp src/config/environments/environments.json.example src/config/environments/development.json
+cp src/config/environments/environments.json.example src/config/environments/test.json
+cp src/config/environments/environments.json.example src/config/environments/production.json
 ```
 
 # Start development
