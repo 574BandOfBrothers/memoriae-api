@@ -13,13 +13,12 @@ AnnotationController.list = ({ search, fields, limit = 20, page = 0, sort } = {}
     .sort(sort)
     .exec();
 
-AnnotationController.count = () => Annotation.count();
+AnnotationController.count = search => Annotation.count(search);
 
 AnnotationController.create = annotationData => new Promise((resolve, reject) => {
   jsonLD.compact(annotationData, 'http://www.w3.org/ns/anno.jsonld')
   .then((compactAnnotationData) => {
     const newAnnotation = new Annotation(compactAnnotationData);
-
     newAnnotation.save().then(resolve, reject);
   })
   .catch(reject);
