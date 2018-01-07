@@ -21,10 +21,10 @@ const routes = () => {
 
   // Authenticated Routes
   api.use(authMiddleware);
+  api.use('/me', me);
   api.use('/users', users);
   api.use('/search', search);
   api.use('/stories', stories);
-  api.use('/me', me);
   api.use('/uploads', uploads);
 
   // Not Found
