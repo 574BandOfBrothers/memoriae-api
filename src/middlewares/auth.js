@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/environment');
 
 const authenticatedMethods = ['POST', 'PUT', 'DELETE'];
-const excludedPaths = [];
+const fullValidationPaths = ['me'];
 
 const User = require('../models/users');
 
@@ -11,15 +11,14 @@ const authMiddleware = (req, res, next) => {
     return next();
   }
 
-  let path = req.path.replace('/v1', '');
-  path = path.split('/')[1];
+  const path = req.path.split('/')[1];
 
   if (path === 'users' && req.method === 'POST') {
     return next();
   }
 
-  const shouldValidate = authenticatedMethods.indexOf(req.method) > -1 &&
-    excludedPaths.indexOf(path) < 0;
+  const shouldValidate = authenticatedMethods.indexOf(req.method) > -1 ||
+    fullValidationPaths.indexOf(path) > -1;
 
   if (shouldValidate) {
     const authHeader = req.headers.authorization;
